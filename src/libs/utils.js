@@ -17,6 +17,44 @@ const utilsModule = ((Function) => {
 
     return res
   }
+
+  Function.prototype.myApply = function (ctx, args) {
+    ctx = Object(ctx) || window
+    ctx.originFn = this
+
+    if (typeof args !== 'object' && typeof args !== 'function')
+      throw new TypeError('CreateListFromArrayLike called on non-object')
+
+    if (!args || typeOf(args) !== 'Array')
+      return ctx.originFn()
+
+    // args + 字符串 -> args 展开平铺到 fn 实参中
+    // ctx.originFn(arguments[1],arguments[2])
+    const res = eval(`ctx.originFn(${args})`)
+
+    delete ctx.originFn
+
+    return res
+  }
+
+  function typeOf(value) {
+    if (value === null)
+      return 'null'
+
+    return typeof (value) === 'object'
+      ? {
+          '[object Object]': 'Object',
+          '[object Array]': 'Array',
+          '[object Number]': 'Number',
+          '[object String]': 'String',
+          '[object Boolean]': 'Boolean',
+        }[({}).toString.call(value)]
+      : typeof (value)
+  }
+
+  return {
+    typeOf,
+  }
 })(Function)
 
 export default utilsModule

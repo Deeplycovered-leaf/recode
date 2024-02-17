@@ -1,11 +1,14 @@
 /* eslint-disable prefer-rest-params */
-/* eslint-disable no-unused-vars */
+
 import utilsModule from './libs/utils'
 
 /**
- * 1. test -> call() -> test()
- * 2. test -> this -> call 的第一个参数
- * 3. call -> 第二个参数开始 -> test 的参数列表
+ * 1. test -> apply() -> test()
+ * 2. apply -> 第二个参数 -> [] -> test 的实参列表
+ * 3. apply -> 第二个参数 -> {} fn -> arguments -> length 0
+ * 4. apply -> 只取的第二个参数 -> 第三个参数开始到最后忽略
+ * 5. apply -> 第二个参数 -> null undefined -> arguments.length 0
+ * 6. apply -> 第二个参数 -> 原始值 -> TypeError: CreateListFromArrayLike called on non-object
  */
 function test() {
   console.log(this, arguments)
@@ -13,18 +16,9 @@ function test() {
   return 'over'
 }
 
-test.myCall({
+test.myApply({
   a: 1,
   b: 2,
-}, 'test1', 'test2')
+}, [1, 3])
 
-const obj = {
-  a: 1,
-  b: 2,
-  test() {
-    console.log(this)
-  },
-}
-
-// 对于一个方法来说，谁调用，函数内部的 this 就是指向谁
-obj.test()
+console.log('utilsModule.typeOf() :>> ', utilsModule.typeOf([1, 3]))
