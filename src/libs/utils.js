@@ -1,3 +1,4 @@
+/* eslint-disable prefer-rest-params */
 /* eslint-disable no-eval */
 const utilsModule = ((Function) => {
   Function.prototype.myCall = function (ctx) {
@@ -50,6 +51,23 @@ const utilsModule = ((Function) => {
           '[object Boolean]': 'Boolean',
         }[({}).toString.call(value)]
       : typeof (value)
+  }
+
+  Function.prototype.myBind = function (ctx) {
+    const originFn = this
+    const args = [].slice.call(arguments, 1)
+    const _tempFn = function () { }
+
+    const newFn = function () {
+      // return new function t arguments list
+      const newArgs = [].slice.call(arguments)
+      return originFn.apply(this instanceof newFn ? this : ctx, args.concat(newArgs))
+    }
+
+    _tempFn.prototype = this.prototype
+    newFn.prototype = new _tempFn()
+
+    return newFn
   }
 
   return {

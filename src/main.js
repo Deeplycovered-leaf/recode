@@ -1,24 +1,26 @@
+/* eslint-disable new-cap */
+/* eslint-disable no-unused-vars */
 /* eslint-disable prefer-rest-params */
 
 import utilsModule from './libs/utils'
 
 /**
- * 1. test -> apply() -> test()
- * 2. apply -> 第二个参数 -> [] -> test 的实参列表
- * 3. apply -> 第二个参数 -> {} fn -> arguments -> length 0
- * 4. apply -> 只取的第二个参数 -> 第三个参数开始到最后忽略
- * 5. apply -> 第二个参数 -> null undefined -> arguments.length 0
- * 6. apply -> 第二个参数 -> 原始值 -> TypeError: CreateListFromArrayLike called on non-object
+ * 1. test -> bing() -> test not execute -> return a new function
+ * 2. bind -> first argument -> test -> this -> { a: 1 }
+ * 3. bing can split test arguments
+ *    bind accept part of arguments  return a new function accept part of arguments
+ * 4. bing & call arguments via is same
+ * 5. new () return function -> this direction test constructor example
+ * 6. example should extend test constructor prototype properties
  */
-function test() {
+function test(user, car) {
+  console.log(`${user}刚买了${car}`)
   console.log(this, arguments)
-
-  return 'over'
 }
 
-test.myApply({
-  a: 1,
-  b: 2,
-}, [1, 3])
+test.prototype.myLove = function () {
 
-console.log('utilsModule.typeOf() :>> ', utilsModule.typeOf([1, 3]))
+}
+const t = test.myBind({ a: 1 }, 'zi')
+console.log('t =>', t('xiaomi'))
+console.log('new t() :>> ', new t('zi'))
